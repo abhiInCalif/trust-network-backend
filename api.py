@@ -120,7 +120,7 @@ class MemberCreate:
         if phone_number == '' or data == {}:
             return web.badrequest()
 
-        if Store.Member.get(key=phone_number).count() > 0:
+        if not Store.Member.get(key=phone_number):
             return web.badrequest()
 
         Store.Member.put(key=phone_number, data=data) # true on success, false otherwise.
