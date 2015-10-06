@@ -1,0 +1,39 @@
+### Starting build.
+Backtrace:
+                      - Failed to build the target a1.d.byte
+                          - Building a1.d.byte:
+                              - Failed to build all of these:
+                                  - Building a1.d.cmo:
+                                      - Failed to build all of these:
+                                          - Building a1.d.ml
+                                          - Building a1.ml:
+                                              - Failed to build all of these:
+                                                  - Building a1.mly
+                                                  - Building a1.mll
+                                          - Building a1.d.mli:
+                                              - Building a1.d.mly
+                                          - Building a1.mli:
+                                              - Building a1.mly
+                                          - Building a1.d.mlpack
+                                          - Building a1.d.mli:
+                                              - Building a1.d.mly
+                                          - Building a1.mlpack
+                                  - Building a1.d.cmo:
+                                      - Failed to build all of these:
+                                          - Building a1.d.ml:
+                                              - Failed to build all of these:
+                                                  - Building a1.d.mly
+                                                  - Building a1.d.mll
+                                          - Building a1.ml:
+                                              - Failed to build all of these:
+                                                  - Building a1.mly
+                                                  - Building a1.mll
+                                          - Building a1.d.mli:
+                                              - Building a1.d.mly
+                                          - Building a1.mli:
+                                              - Building a1.mly
+                                          - Building a1.d.mlpack
+                                          - Building a1.d.mli:
+                                              - Building a1.d.mly
+                                          - Building a1.mlpack
+# Compilation unsuccessful.

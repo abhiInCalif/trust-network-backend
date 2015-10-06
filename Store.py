@@ -15,7 +15,7 @@ class Question:
         }
         doc.update(key.getKeyParts())
         doc.update(data)
-        return database().Question.insert_one(doc)
+        return database().Question.update({'_id': str(key)}, doc, upsert=True)
 
     @staticmethod
     def fetch(askerUrn):
@@ -33,14 +33,16 @@ class Reply:
         }
         doc.update(key.getKeyParts())
         doc.update(data)
-        return database().Reply.insert_one(doc)
+        return database().Reply.update({'_id': str(key)}, doc, upsert=True)
 
     @staticmethod
     def fetch(askerUrn, questionUrn):
         return database().Reply.find({'asker_urn': askerUrn, 'question_urn': questionUrn})
 
-    def get(self):
-        pass
+    @staticmethod
+    def get(key):
+        cursor_list = list(database().Reply.find({'_id': str(key)}))
+        return cursor_list[0] if len(cursor_list) > 0 else {}
 
 class ReplyPromise:
     @staticmethod
@@ -54,7 +56,7 @@ class ReplyPromise:
         }
         doc.update(key.getKeyParts())
         doc.update(data)
-        return database().ReplyPromise.insert_one(doc)
+        return database().ReplyPromise.update({'_id': str(key)}, doc, upsert=True)
 
 class Member:
     @staticmethod
@@ -64,14 +66,15 @@ class Member:
         }
         # doc.update(key.getKeyParts()), not needed since currently just phone number key
         doc.update(data)
-        return database().Member.insert_one(doc)
+        return database().Member.update({'_id': str(key)}, doc, upsert=True)
 
     def fetch(self):
         pass
 
     @staticmethod
     def get(key):
-        return database().Member.find({'_id': str(key)})[0]
+        cursor_list = list(database().Member.find({'_id': str(key)}))
+        return cursor_list[0] if len(cursor_list) > 0 else {}
 
 class Contact:
     @staticmethod
@@ -81,11 +84,13 @@ class Contact:
         }
         doc.update(key.getKeyParts())
         doc.update(data)
-        return database().Contact.insert_one(doc)
+        return database().Contact.update({'_id': str(key)}, doc, upsert=True)
 
     @staticmethod
     def fetch(actorUrn):
         return database().Contact.find({'actor_urn': str(actorUrn)})
 
-    def get(self):
-        pass
+    @staticmethod
+    def get(key):
+        cursor_list = list(database().Contact.find({'_id': str(key)}))
+        return cursor_list[0] if len(cursor_list) > 0 else {}
