@@ -71,7 +71,7 @@ class AskCreate:
                 "text": data.get("questionText", ""),
                 "urn": question_urn
             }
-            requests.post(url="http://" + "localhost" + ":" + "8081" + "/notification/create", data=dataForRequest)
+            requests.post(url="http://" + "trust-network-notifications.herokuapp.com" + "/notification/create", data=dataForRequest)
 
 class RespondFetchQuestionsAskedToMe:
     def GET(self):
