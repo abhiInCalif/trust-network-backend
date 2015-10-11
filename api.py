@@ -105,6 +105,7 @@ class RespondReply:
     def POST(self):
         web.header('Content-type', 'application/json')
         request_input = web.input(askerUrn='', data={}, actorUrn='', questionUrn='')
+        print request_input.data
         if request_input.askerUrn == '' or request_input.data == {} or request_input.actorUrn == '' \
                 or request_input.questionUrn == '':
             return web.badrequest()
