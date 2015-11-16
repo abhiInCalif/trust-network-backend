@@ -7,6 +7,7 @@ import uuid
 import ast
 import json
 import requests
+import pysolr
 
 
 
@@ -21,7 +22,11 @@ urls = (
     '/contact/add', 'ContactAdd',
     '/ask/detail', 'AskDetail',
     '/ask/list', 'AskList',
-    '/ask/create', 'AskCreate'
+    '/ask/create', 'AskCreate',
+    '/stories/list', 'StoryList',
+    '/stories/view', 'HumanMarkStoryList',
+    '/stories/create', 'HumanMarkStoryScrapeCreate',
+    '/accept/story', 'HumanMarkForward',
 )
 
 class AskDetail:
@@ -161,6 +166,75 @@ class ContactAdd:
         key = StoreUtils.Contact.createKey(actorUrn=actor_urn, memberUrn=member_urn)
         Store.Contact.put(key=key, data=data)
 
+class StoryList:
+    def GET(self):
+        # this api endpoint is responsible for tossing back the next 10 stories given a starting point.
+        web.header('Content-type', 'application/json')
+        request_input = web.input(start=0, count=10)
+        start = request_input.start
+        count = request_input.count
+        solr = pysolr.Solr('http://localhost:8983/solr/survivor_stories/', timeout=10)
+        results = solr.search("*:*", **{'start': start, 'rows': count})
+        formatted_result_list = []
+        for r in results:
+            formatted_result_list.append({
+                "title": r["title"],
+                "url": r["id"],
+                "image": r.get("picture", ""),
+                "hasImage": False if r.get("picture", "") == "" else True
+            })
+        return json.dumps(formatted_result_list)
+
+
+"""
+The section that follows will be constrained to have code that displays the checking system
+"""
+class HumanMarkStoryList:
+    def GET(self):
+        # page to allow humans to mark the different aggreagted texts as valid or not valid.
+        render = web.template.render('templates')
+        doc = Store.StoryDraft.dequeue()
+        if doc is None:
+            return render.stories("", "", "", 0, 0, "")
+
+        url = doc['url']
+        title = doc['title']
+        image = doc['image']
+        emotional_score = doc['emotional_score']
+        quality_score = doc['quality_score']
+        body = doc['body']
+        return render.stories(url, title, image, emotional_score, quality_score, body)
+
+class HumanMarkStoryScrapeCreate:
+    def POST(self):
+        # api endpoint that allows you to post a story to the draft section.
+        web.header('Content-type', 'application/json')
+        request_input = web.input(url='', title='', image='', emotional_score=-1, quality_score=-1, body='')
+        url = request_input.url
+        title = request_input.title
+        image = request_input.image
+        emotional_score = request_input.emotional_score
+        quality_score = request_input.quality_score
+        body = request_input.body
+        if url == '' or title == '' or image == '' or emotional_score == -1 or quality_score == -1 or body == '':
+            return web.badrequest()
+
+        data = {
+            "url": url,
+            "title": title,
+            "image": image,
+            "emotional_score": emotional_score,
+            "quality_score": quality_score,
+            "body": body,
+        }
+        # we have a good set on our hands, go ahead and store a draft
+        Store.StoryDraft.create(data)
+
+class HumanMarkForward:
+    def POST(self):
+        web.header('Content-type', 'application/json')
+        data = web.data()
+        requests.post(url="http://" + "localhost:8081" + "/accept/story", data=data)
 
 if __name__ == "__main__":
     app = web.application(urls, globals())

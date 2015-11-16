@@ -94,3 +94,22 @@ class Contact:
     def get(key):
         cursor_list = list(database().Contact.find({'_id': str(key)}))
         return cursor_list[0] if len(cursor_list) > 0 else {}
+
+class StoryDraft:
+    @staticmethod
+    def create(data):
+        doc = {}
+        doc.update(data)
+        exist_doc = database().StoryDraft.find_one({"url": data.get('url', '')})
+        if exist_doc is None:
+            return database().StoryDraft.insert_one(doc)
+        else:
+            print "caught duplicates\n\n"
+
+    @staticmethod
+    def dequeue():
+        # gets the first entry from the table and deletes it after returning it to the api.
+        # think queue.dequeue
+        doc = database().StoryDraft.find_one()
+        database().StoryDraft.remove(doc)
+        return doc
