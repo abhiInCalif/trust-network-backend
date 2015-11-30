@@ -1,0 +1,157 @@
+$def with (url, title, image, emotional_score, quality_score, body)
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cancer Survivor Stories</title>
+    <link href="/static/bootstrap.css" rel="stylesheet"/>
+    <style>
+        body {
+            font-family: 'Adobe Garamond W08', 'adobe-garamond-pro', 'AGaramondPro-Regular', 'Times New Roman', 'Times', 'serif';
+        }
+        #title {
+            width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        h1 {
+            text-align: center;
+            font-size: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        #yesNoHolder {
+            text-align: left;
+        }
+        .title_image {
+            width: 270px;
+        }
+        #container {
+        }
+        .imageAndTitle {
+            float:left;
+            display:inline;
+            width: 300px;
+            margin-left: 15px;
+        }
+
+        .story_frame {
+            height: 800px;
+            width: 90%;
+            padding-left: 15px;
+            margin-left: 15px;
+            border: 0px solid white;
+            border-left: 3px solid black;
+        }
+        #yesNoHolder button {
+            width: 50%;
+            border-radius: 0px;
+        }
+    </style>
+    <script src="/static/jquery.js"></script>
+    <script src="/static/bootstrap.min.js"></script>
+    <script>
+        $$(document).ready(function() {
+            $$("#save_all").click(function() {
+                // get all the content from the various fields and store them into the solr store
+                // this is coming from the NO flow.
+                var link = "$url";
+                var title = $$("#title_injected").text();
+                var image = "$image";
+                var emotional_score = "$emotional_score";
+                var quality_score = "$quality_score";
+                var body = $$("#body").val();
+                var response = $$("#response").val();
+                $$.post("/accept/story", {
+                    "answer": response,
+                    "url": link,
+                    "title": title,
+                    "image": image,
+                    "emotional_score": emotional_score,
+                    "quality_score": quality_score,
+                    "body": body,
+                }, function(responseData) {
+                    // do nothing with it since nothing is responded.
+                    console.log("Response recorded");
+                });
+
+                location = "http://localhost:8080/stories/view";
+                location.reload(true);
+            });
+
+            $$("#yes").click(function() {
+                var link = "$url";
+                var title = $$("#title_injected").text();
+                var image = "$image";
+                var emotional_score = "$emotional_score";
+                var quality_score = "$quality_score";
+                var body = $$("#body").val();
+                var response = "yes";
+                $$.post("/accept/story", {
+                    "answer": response,
+                    "url": link,
+                    "title": title,
+                    "image": image,
+                    "emotional_score": emotional_score,
+                    "quality_score": quality_score,
+                    "body": body,
+                }, function(responseData) {
+                    // do nothing with it since nothing is responded.
+                    console.log("Response recorded");
+                });
+
+                location = "http://localhost:8080/stories/view";
+                location.reload(true);
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="container">
+        <div id="title">
+            <h1>Survivor Stories</h1>
+        </div>
+        <div class="imageAndTitle">
+            <h4>Preview Picture</h4>
+            <img src="$image" class="title_image"/>
+            <p><h4 id="title_injected">$title</h4></p>
+            <p><h4>Is this story quality?</h4></p>
+            <div id="yesNoHolder">
+                <button class="btn btn-info btn-lg" id="yes">Yes</button><button type="button" data-toggle="modal" data-target="#myModal" class="btn btn-warning btn-lg">No</button>
+            </div>
+        </div>
+        <div style="display:inline;width:950px;float:right;">
+            <iframe src="$url" class="story_frame" width="850px" sandbox></iframe>
+        </div>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Why was it a bad story?</h4>
+                </div>
+                <div class="modal-body" style="margin-left: 25%;">
+                    <select id="response">
+                        <option value="repeat">Content was repeated!</option>
+                        <option value="pic_bad-content_good">Picture was bad, but the content was good.</option>
+                        <option value="pic_bad-content_bad">Picture was bad, and content was bad.</option>
+                        <option value="pic_good-content_bad">Picture was good, but the content was bad.</option>
+                        <option value="pic_good-content_good">Everything was good, but I just didn't like it.</option>
+                    </select>
+                    <div style="margin-top:75px; position:relative; left:220px;">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="save_all" data-dismiss="modal">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <textarea style="display:none;" id="body">
+        $body
+    </textarea>
+</body>
+</html>
