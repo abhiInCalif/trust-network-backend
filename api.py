@@ -23,7 +23,7 @@ urls = (
     '/ask/detail', 'AskDetail',
     '/ask/list', 'AskList',
     '/ask/create', 'AskCreate',
-    '/stories/list', 'StoryList',
+    '/stories/list',` 'StoryList',
     '/stories/view', 'HumanMarkStoryList',
     '/stories/create', 'HumanMarkStoryScrapeCreate',
     '/accept/story', 'HumanMarkForward',
@@ -173,7 +173,7 @@ class StoryList:
         request_input = web.input(start=0, count=10)
         start = request_input.start
         count = request_input.count
-        solr = pysolr.Solr('http://localhost:8983/solr/survivor_stories/', timeout=10)
+        solr = pysolr.Solr('http://52.91.13.38:8983/solr/survivor_stories/', timeout=10)
         results = solr.search("*:*", **{'start': start, 'rows': count})
         formatted_result_list = []
         for r in results:
@@ -234,7 +234,7 @@ class HumanMarkForward:
     def POST(self):
         web.header('Content-type', 'application/json')
         data = web.data()
-        requests.post(url="http://" + "localhost:8081" + "/accept/story", data=data)
+        requests.post(url="http://" + "52.91.13.38:8081" + "/accept/story", data=data)
 
 if __name__ == "__main__":
     app = web.application(urls, globals())
