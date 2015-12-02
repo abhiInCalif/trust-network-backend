@@ -23,7 +23,7 @@ urls = (
     '/ask/detail', 'AskDetail',
     '/ask/list', 'AskList',
     '/ask/create', 'AskCreate',
-    '/stories/list',` 'StoryList',
+    '/stories/list', 'StoryList',
     '/stories/view', 'HumanMarkStoryList',
     '/stories/create', 'HumanMarkStoryScrapeCreate',
     '/accept/story', 'HumanMarkForward',
