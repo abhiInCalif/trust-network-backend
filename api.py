@@ -90,7 +90,13 @@ class RespondFetchQuestionsAskedToMe:
         target_member = request_input.targetMember
         if target_member == '':
             return web.badrequest()
-        return json.dumps(list(Store.ReplyPromise.fetch(targetMember=target_member)))
+        responds = list(Store.ReplyPromise.fetch(targetMember=target_member))
+        for r in responds:
+            asker_urn = r['asker_urn']
+            asker_contact_info = Store.Contact.find({'member_urn': asker_urn})
+            r['asker_name'] = asker_contact_info[0]['name'] if len(asker_contact_info) > 0 else ""
+
+        return json.dumps(responds)
 
 
 class RespondFetchQuestionDetail:
