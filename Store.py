@@ -91,6 +91,10 @@ class Contact:
         return database().Contact.find({'actor_urn': str(actorUrn)})
 
     @staticmethod
+    def find(query):
+        return list(database().Contact.find(query))
+
+    @staticmethod
     def get(key):
         cursor_list = list(database().Contact.find({'_id': str(key)}))
         return cursor_list[0] if len(cursor_list) > 0 else {}
