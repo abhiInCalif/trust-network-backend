@@ -100,7 +100,7 @@ class RespondFetchQuestionDetail:
         key = StoreUtils.Question.createKey(askerUrn=asker_urn, questionUrn=question_urn)
         question_data = Store.Question.get(key=key)
         asker_contact_info = Store.Contact.find({'member_urn': asker_urn})
-        question_data['asker_name'] = asker_contact_info['name'] if len(asker_contact_info) > 0 else ""
+        question_data['asker_name'] = asker_contact_info[0]['name'] if len(asker_contact_info) > 0 else ""
         reply_key = StoreUtils.Reply.createKey(askerUrn=asker_urn, questionUrn=question_urn, actorUrn=actor_urn)
         reply_data = Store.Reply.get(key=reply_key)
         return json.dumps({"question_data": question_data, "reply_data": reply_data})
