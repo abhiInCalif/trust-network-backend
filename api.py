@@ -40,6 +40,11 @@ class AskDetail:
         question_key = StoreUtils.Question.createKey(askerUrn=asker_urn, questionUrn=question_urn)
         question_data = Store.Question.get(key=question_key)
         reply_data = list(Store.Reply.fetch(askerUrn=asker_urn, questionUrn=question_urn))
+        for data in reply_data:
+            c_actor = data['actor_urn']
+            actor_contact_info = Store.Contact.find({'member_urn': c_actor})
+            data['actor_name'] = actor_contact_info[0]['name'] if len(actor_contact_info) > 0 else ""
+
         return json.dumps({'question_data': question_data, 'reply_data': reply_data})
 
 class AskList:
