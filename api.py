@@ -247,7 +247,7 @@ class HumanMarkForward:
     def POST(self):
         web.header('Content-type', 'application/json')
         data = web.data()
-        requests.post(url="http://" + "54.85.8.125:8081" + "/accept/story", data=data)
+        requests.post(url="http://" + "54.86.96.127:8081" + "/accept/story", data=data)
 
 if __name__ == "__main__":
     app = web.application(urls, globals())
